@@ -66,3 +66,62 @@
   color: white;
   margin-top: 10px;
 }
+
+.option {
+  font-size: 12px;
+}
+
+.cmd {
+  font-size: 12px;
+  width: 70px;
+}
+
+.arrow {
+  width: 35px;
+  font-size: 12px;
+}
+
+.space {
+  width: 300px;
+  border-radius: 5px;
+}
+
+.ctrl {
+  font-size: 12px;
+}
+
+.shift2 {
+  border-radius: 5px;
+  font-size: 12px;
+  width: 180px;
+}
+
+.enter {
+  border-radius: 5px;
+  font-size: 12px;
+  width: 120px;
+}
+
+.delete {
+  border-radius: 5px;
+  font-size: 12px;
+  width: 100px;
+}
+
+.shift {
+  border-radius: 5px;
+  font-size: 12px;
+  width: 90px;
+}
+
+.caps {
+  border-radius: 5px;
+  font-size: 12px;
+  width: 160px;
+}
+
+.tab {
+  border-radius: 5px;
+  font-size: 12px;
+  width: 90px;
+}
