@@ -42,12 +42,14 @@
 }
 
 .key:hover {
-  background-color: #f09394;
+  background-color: #f7c9c9;
   color: white;
 }
 
 .key:active {
   border-radius: 50%;
+  background-color: #f09394;
+  color: white;
 }
 
 .container-rows {
@@ -65,6 +67,33 @@
   font-size: 12px;
   color: white;
   margin-top: 10px;
+}
+
+.service-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  background-color: white;
+  color: black;
+  font-family: system-ui, sans-serif;
+  font-size: 16px;
+  margin: 0 5px;
+  cursor: pointer;
+  border-radius: 10%;
+  transition: all 0.2s ease-in-out;
+}
+
+.service-buttons:hover {
+  background-color: #f7c9c9;
+  color: white;
+}
+
+.service-buttons:active {
+  border-radius: 50%;
+  background-color: #f09394;
+  color: white;
 }
 
 .option {
@@ -125,3 +154,5 @@
   font-size: 12px;
   width: 90px;
 }
+
+
