@@ -307,13 +307,15 @@ function onKeyPress(event) {
   textarea.value += value;
 }
 
-document.addEventListener("keypress", (event) => {
+document.addEventListener("keydown", (event) => {
   const key = document.querySelectorAll(`.key[data-key="${event}"], .service-buttons[data-key="${event}"]`); 
   if(key) {
-    key.forEach(el => el.click()); 
+    key.forEach(el => {el.click();
+    el.classList.add("pressed");}
+    ); 
+    
   }
 });
-
 
 
 keys.forEach((key) => key.addEventListener("click", onKeyPress));

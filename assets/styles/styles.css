@@ -53,6 +53,12 @@
   color: white;
 }
 
+.pressed {
+  border-radius: 50%;
+  background-color: #f09394;
+  color: white;
+}
+
 .container-rows {
   /*display: flex;
     flex-direction: row;
@@ -154,6 +160,10 @@
   border-radius: 5px;
   font-size: 12px;
   width: 90px;
+}
+
+.esc {
+  font-size: 12px;
 }
 
 
