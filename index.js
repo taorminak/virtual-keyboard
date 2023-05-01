@@ -22,11 +22,9 @@ const rowsWithRussian = [
   "",
 ];
 
-
-let capsLockEnabled = localStorage.getItem('capsLockEnabled');
-console.log(capsLockEnabled)
-let isRussian = localStorage.getItem('isRussian');
-
+let capsLockEnabled = localStorage.getItem("capsLockEnabled");
+console.log(capsLockEnabled);
+let isRussian = localStorage.getItem("isRussian");
 
 for (let i = 0; i < rows.length; i++) {
   let row = document.createElement("div");
@@ -46,8 +44,6 @@ for (let i = 0; i < rows.length; i++) {
     row.insertBefore(keyTab, row.firstChild);
 
     keyTab.addEventListener("click", addIndent);
-
-
   }
   if (i === 2) {
     let keyCapsLock = document.createElement("div");
@@ -86,11 +82,18 @@ for (let i = 0; i < rows.length; i++) {
     keyEnter.textContent = "enter";
     row.appendChild(keyEnter);
 
-    keyEnter.addEventListener("click", function() {
+    keyEnter.addEventListener("click", function () {
       let cursorPosition = textarea.selectionStart;
-      let textBeforeCursorPosition = textarea.value.substring(0, cursorPosition);
-      let textAfterCursorPosition = textarea.value.substring(cursorPosition, textarea.value.length);
-      textarea.value = textBeforeCursorPosition + "\n" + textAfterCursorPosition;
+      let textBeforeCursorPosition = textarea.value.substring(
+        0,
+        cursorPosition
+      );
+      let textAfterCursorPosition = textarea.value.substring(
+        cursorPosition,
+        textarea.value.length
+      );
+      textarea.value =
+        textBeforeCursorPosition + "\n" + textAfterCursorPosition;
       textarea.selectionStart = cursorPosition + 1;
       textarea.selectionEnd = cursorPosition + 1;
       textarea.focus();
@@ -128,14 +131,13 @@ for (let i = 0; i < rows.length; i++) {
         }
         isRussian = true;
       }
-      localStorage.setItem('isRussian', isRussian);
+      localStorage.setItem("isRussian", isRussian);
       if (Boolean(capsLockEnabled) === true) {
         const keys = document.querySelectorAll(".key");
         keys.forEach((key) => {
           key.textContent = key.textContent.toUpperCase();
         });
-      }
-      else {
+      } else {
         keys.forEach((key) => {
           key.textContent = key.textContent.toLowerCase();
         });
@@ -171,7 +173,6 @@ for (let i = 0; i < rows.length; i++) {
 
     keySpace.addEventListener("click", addSpace);
 
-
     let keyCmd2 = document.createElement("div");
     keyCmd2.classList.add("service-buttons", "cmd");
     keyCmd2.textContent = "command";
@@ -189,12 +190,10 @@ for (let i = 0; i < rows.length; i++) {
 
     keyLeft.addEventListener("click", addLeft);
 
-
     let keyUp = document.createElement("div");
     keyUp.classList.add("service-buttons", "arrow");
     keyUp.textContent = "↑";
     row.appendChild(keyUp);
-
 
     keyUp.addEventListener("click", addUp);
 
@@ -213,25 +212,22 @@ for (let i = 0; i < rows.length; i++) {
     keyDown.addEventListener("click", addDown);
   }
 
-
-  window.addEventListener('load', () => {
+  window.addEventListener("load", () => {
     if (capsLockEnabled === "true") {
       keys.forEach((key) => {
         key.textContent = key.textContent.toUpperCase();
-      })
+      });
     }
-  
   });
   containerRows.appendChild(row);
 }
 
 const keys = document.querySelectorAll(".key");
-const serviceButtons = document.querySelectorAll('.service-buttons');
-
+const serviceButtons = document.querySelectorAll(".service-buttons");
 
 function addLeft() {
   textarea.value = textarea.value + "←";
-} 
+}
 
 function addRight() {
   textarea.value = textarea.value + "→";
@@ -246,22 +242,22 @@ function addDown() {
 }
 
 function handleKeyDown(event) {
-  if (event.shiftKey && event.target.classList.contains('key')) {
+  if (event.shiftKey && event.target.classList.contains("key")) {
     event.preventDefault();
     textarea.value += event.target.textContent.toUpperCase();
   }
 }
 
-document.addEventListener('keydown', handleKeyDown);
+document.addEventListener("keydown", handleKeyDown);
 
-if (capsLockEnabled==="true") {
+if (capsLockEnabled === "true") {
   const keys = document.querySelectorAll(".key");
   keys.forEach((key) => {
     key.textContent = key.textContent.toUpperCase();
-  })
+  });
 }
 
-if (isRussian==="true") {
+if (isRussian === "true") {
   for (let i = 0; i < rowsWithRussian.length; i++) {
     let currentRow = containerRows.children[i];
     for (let j = 0; j < rowsWithRussian[i].length; j++) {
@@ -274,12 +270,12 @@ function deletePreviousChar() {
   let cursorPosition = textarea.selectionStart;
   if (cursorPosition > 0) {
     let text = textarea.value;
-    textarea.value = text.substring(0, cursorPosition - 1) + text.substring(cursorPosition);
+    textarea.value =
+      text.substring(0, cursorPosition - 1) + text.substring(cursorPosition);
     textarea.selectionStart = cursorPosition - 1;
     textarea.selectionEnd = cursorPosition - 1;
   }
 }
-
 
 function toggleCapslock() {
   keys.forEach((key) => {
@@ -290,8 +286,7 @@ function toggleCapslock() {
     }
   });
   capsLockEnabled = !capsLockEnabled;
-  localStorage.setItem('capsLockEnabled', capsLockEnabled);
-
+  localStorage.setItem("capsLockEnabled", capsLockEnabled);
 }
 
 function addSpace() {
@@ -308,14 +303,15 @@ function onKeyPress(event) {
 }
 
 document.addEventListener("keydown", (event) => {
-  const key = document.querySelectorAll(`.key[data-key="${event}"], .service-buttons[data-key="${event}"]`); 
-  if(key) {
-    key.forEach(el => {el.click();
-    el.classList.add("pressed");}
-    ); 
-    
+  const key = document.querySelectorAll(
+    `.key[data-key="${event}"], .service-buttons[data-key="${event}"]`
+  );
+  if (key) {
+    key.forEach((el) => {
+      el.click();
+      el.classList.add("pressed");
+    });
   }
 });
-
 
 keys.forEach((key) => key.addEventListener("click", onKeyPress));
