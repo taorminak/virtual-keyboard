@@ -22,8 +22,11 @@ const rowsWithRussian = [
   "",
 ];
 
-let capsLockEnabled = false;
-let isRussian = false;
+
+let capsLockEnabled = localStorage.getItem('capsLockEnabled');
+console.log(capsLockEnabled)
+let isRussian = localStorage.getItem('isRussian');
+
 
 for (let i = 0; i < rows.length; i++) {
   let row = document.createElement("div");
@@ -41,6 +44,10 @@ for (let i = 0; i < rows.length; i++) {
     keyTab.classList.add("tab", "service-buttons");
     keyTab.textContent = "tab";
     row.insertBefore(keyTab, row.firstChild);
+
+    keyTab.addEventListener("click", addIndent);
+
+
   }
   if (i === 2) {
     let keyCapsLock = document.createElement("div");
@@ -69,6 +76,8 @@ for (let i = 0; i < rows.length; i++) {
     keyDelete.classList.add("service-buttons", "delete");
     keyDelete.textContent = "delete";
     row.appendChild(keyDelete);
+
+    keyDelete.addEventListener("click", deletePreviousChar);
   }
 
   if (i === 1) {
@@ -76,6 +85,16 @@ for (let i = 0; i < rows.length; i++) {
     keyEnter.classList.add("service-buttons", "enter");
     keyEnter.textContent = "enter";
     row.appendChild(keyEnter);
+
+    keyEnter.addEventListener("click", function() {
+      let cursorPosition = textarea.selectionStart;
+      let textBeforeCursorPosition = textarea.value.substring(0, cursorPosition);
+      let textAfterCursorPosition = textarea.value.substring(cursorPosition, textarea.value.length);
+      textarea.value = textBeforeCursorPosition + "\n" + textAfterCursorPosition;
+      textarea.selectionStart = cursorPosition + 1;
+      textarea.selectionEnd = cursorPosition + 1;
+      textarea.focus();
+    });
   }
 
   if (i === 3) {
@@ -92,10 +111,6 @@ for (let i = 0; i < rows.length; i++) {
     row.appendChild(keyFn);
 
     function handleClick() {
-      if (!capsLockEnabled) {
-        toggleCapslock();
-        console.log(capsLockEnabled);
-      }
       if (isRussian) {
         for (let i = 0; i < rows.length; i++) {
           let currentRow = containerRows.children[i];
@@ -113,10 +128,16 @@ for (let i = 0; i < rows.length; i++) {
         }
         isRussian = true;
       }
-      if (capsLockEnabled) {
+      localStorage.setItem('isRussian', isRussian);
+      if (Boolean(capsLockEnabled) === true) {
         const keys = document.querySelectorAll(".key");
         keys.forEach((key) => {
           key.textContent = key.textContent.toUpperCase();
+        });
+      }
+      else {
+        keys.forEach((key) => {
+          key.textContent = key.textContent.toLowerCase();
         });
       }
     }
@@ -148,6 +169,9 @@ for (let i = 0; i < rows.length; i++) {
     keySpace.textContent = "";
     row.appendChild(keySpace);
 
+    keySpace.addEventListener("click", addSpace);
+
+
     let keyCmd2 = document.createElement("div");
     keyCmd2.classList.add("service-buttons", "cmd");
     keyCmd2.textContent = "command";
@@ -163,27 +187,101 @@ for (let i = 0; i < rows.length; i++) {
     keyLeft.textContent = "←";
     row.appendChild(keyLeft);
 
+    keyLeft.addEventListener("click", addLeft);
+
+
     let keyUp = document.createElement("div");
     keyUp.classList.add("service-buttons", "arrow");
     keyUp.textContent = "↑";
     row.appendChild(keyUp);
+
+
+    keyUp.addEventListener("click", addUp);
 
     let keyRight = document.createElement("div");
     keyRight.classList.add("service-buttons", "arrow");
     keyRight.textContent = "→";
     row.appendChild(keyRight);
 
+    keyRight.addEventListener("click", addRight);
+
     let keyDown = document.createElement("div");
     keyDown.classList.add("service-buttons", "arrow");
-    keyDown.setAttribute("value", "");
     keyDown.textContent = "↓";
     row.appendChild(keyDown);
+
+    keyDown.addEventListener("click", addDown);
   }
+
+
+  window.addEventListener('load', () => {
+    if (capsLockEnabled === "true") {
+      keys.forEach((key) => {
+        key.textContent = key.textContent.toUpperCase();
+      })
+    }
+  
+  });
   containerRows.appendChild(row);
 }
 
-function toggleCapslock() {
+const keys = document.querySelectorAll(".key");
+const serviceButtons = document.querySelectorAll('.service-buttons');
+
+
+function addLeft() {
+  textarea.value = textarea.value + "←";
+} 
+
+function addRight() {
+  textarea.value = textarea.value + "→";
+}
+
+function addUp() {
+  textarea.value = textarea.value + "↑";
+}
+
+function addDown() {
+  textarea.value = textarea.value + "↓";
+}
+
+function handleKeyDown(event) {
+  if (event.shiftKey && event.target.classList.contains('key')) {
+    event.preventDefault();
+    textarea.value += event.target.textContent.toUpperCase();
+  }
+}
+
+document.addEventListener('keydown', handleKeyDown);
+
+if (capsLockEnabled==="true") {
   const keys = document.querySelectorAll(".key");
+  keys.forEach((key) => {
+    key.textContent = key.textContent.toUpperCase();
+  })
+}
+
+if (isRussian==="true") {
+  for (let i = 0; i < rowsWithRussian.length; i++) {
+    let currentRow = containerRows.children[i];
+    for (let j = 0; j < rowsWithRussian[i].length; j++) {
+      currentRow.children[j + 1].textContent = rowsWithRussian[i][j];
+    }
+  }
+}
+
+function deletePreviousChar() {
+  let cursorPosition = textarea.selectionStart;
+  if (cursorPosition > 0) {
+    let text = textarea.value;
+    textarea.value = text.substring(0, cursorPosition - 1) + text.substring(cursorPosition);
+    textarea.selectionStart = cursorPosition - 1;
+    textarea.selectionEnd = cursorPosition - 1;
+  }
+}
+
+
+function toggleCapslock() {
   keys.forEach((key) => {
     if (!capsLockEnabled) {
       key.textContent = key.textContent.toUpperCase();
@@ -192,13 +290,30 @@ function toggleCapslock() {
     }
   });
   capsLockEnabled = !capsLockEnabled;
+  localStorage.setItem('capsLockEnabled', capsLockEnabled);
+
+}
+
+function addSpace() {
+  textarea.value = textarea.value + " ";
+}
+
+function addIndent() {
+  textarea.value = textarea.value + "    ";
 }
 
 function onKeyPress(event) {
   const value = event.target.innerHTML;
-
   textarea.value += value;
 }
 
-const keys = keyboard.querySelectorAll(".key");
+document.addEventListener("keypress", (event) => {
+  const key = document.querySelectorAll(`.key[data-key="${event}"], .service-buttons[data-key="${event}"]`); 
+  if(key) {
+    key.forEach(el => el.click()); 
+  }
+});
+
+
+
 keys.forEach((key) => key.addEventListener("click", onKeyPress));
