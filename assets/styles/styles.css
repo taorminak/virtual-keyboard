@@ -60,9 +60,6 @@
 }
 
 .container-rows {
-  /*display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;*/
   border: 2px solid #f09394;
   width: 80%;
   padding: 10px 15px;
