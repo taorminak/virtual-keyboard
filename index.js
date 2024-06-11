@@ -1,31 +1,19 @@
-const createKeyboard = () => {
-  const keyboard = document.createElement("div");
-  keyboard.classList.add("keyboard");
-  document.body.appendChild(keyboard);
-  return keyboard;
-};
+import {
+  saveCapsLockState,
+  saveLanguageState,
+  getCapsLockEnabled,
+  getLanguage,
+} from "./storage.js";
+import {
+  createComment,
+  createContainerRows,
+  createTextarea,
+  createKeyboard,
+  createKey,
+} from "./layout.js";
 
-const createTextarea = (keyboard) => {
-  const textarea = document.createElement("textarea");
-  textarea.classList.add("textarea");
-  keyboard.appendChild(textarea);
-  return textarea;
-};
-
-const createContainerRows = (keyboard) => {
-  const containerRows = document.createElement("div");
-  containerRows.classList.add("container-rows");
-  keyboard.appendChild(containerRows);
-  return containerRows;
-};
-
-const createComment = (keyboard) => {
-  const comment = document.createElement("div");
-  comment.classList.add("comment");
-  comment.innerHTML =
-    "The keyboard is created in the macOS operating system<br/>To switch the language, use \u{1F310}";
-  keyboard.appendChild(comment);
-};
+let capsLockEnabled = getCapsLockEnabled();
+let isRussian = getLanguage();
 
 const keyboard = createKeyboard();
 const textarea = createTextarea(keyboard);
@@ -40,9 +28,6 @@ const rowsWithRussian = [
   "ячсмитьбю?",
   "",
 ];
-
-let capsLockEnabled = localStorage.getItem("capsLockEnabled");
-let isRussian = localStorage.getItem("isRussian");
 
 function addLeft() {
   textarea.value += "←";
@@ -89,99 +74,91 @@ function toggleCapslock() {
   saveCapsLockState(capsLockEnabled);
 }
 
-const saveCapsLockState = (capsLockEnabled) => {
-  localStorage.setItem("capsLockEnabled", capsLockEnabled);
-};
+function toggleLanguage() {
+  const targetRows = isRussian ? rows : rowsWithRussian;
+  for (let i = 0; i < targetRows.length; i++) {
+    const currentRow = containerRows.children[i];
+    for (let j = 0; j < targetRows[i].length; j++) {
+      currentRow.children[j + 1].textContent = targetRows[i][j];
+    }
+  }
+  isRussian = !isRussian;
+  saveLanguageState(isRussian);
+}
+
+function toggleCase() {
+  const convertCase = capsLockEnabled
+    ? (text) => text.toUpperCase()
+    : (text) => text.toLowerCase();
+  keys.forEach((key) => {
+    const newText = convertCase(key.textContent);
+    key.textContent = newText;
+  });
+}
 
 function handleClick() {
-  if (isRussian) {
-    for (let i = 0; i < rows.length; i += 1) {
-      const currentRow = containerRows.children[i];
-      for (let j = 0; j < rows[i].length; j += 1) {
-        currentRow.children[j + 1].textContent = rows[i][j];
-      }
-    }
-    isRussian = false;
-  } else {
-    for (let i = 0; i < rowsWithRussian.length; i += 1) {
-      const currentRow = containerRows.children[i];
-      for (let j = 0; j < rowsWithRussian[i].length; j += 1) {
-        currentRow.children[j + 1].textContent = rowsWithRussian[i][j];
-      }
-    }
-    isRussian = true;
-  }
-  localStorage.setItem("isRussian", isRussian);
-  if (Boolean(capsLockEnabled) === true) {
-    keys.forEach((key) => {
-      const newKey = key.textContent.toUpperCase();
-      key.textContent = newKey;
-    });
-  } else {
-    keys.forEach((key) => {
-      const newKey = key.textContent.toLowerCase();
-      key.textContent = newKey;
-    });
+  toggleLanguage();
+  toggleCase();
+}
+
+function createSpecialKeys(i) {
+  switch (i) {
+    case 0:
+      return [createKey(["esc", "service-buttons"], "esc")];
+    case 1:
+      return [createKey(["tab", "service-buttons"], "tab", addIndent)];
+    case 2:
+      return [
+        createKey(["service-buttons", "caps"], "caps lock", toggleCapslock),
+      ];
+    case 3:
+      return [createKey(["service-buttons", "shift"], "shift")];
+    case 4:
+      return [
+        createKey(["service-buttons"], "\u{1F310}", handleClick),
+        createKey(["service-buttons", "ctrl"], "control", () => {
+          textarea.value = "";
+        }),
+        createKey(["service-buttons", "option"], "option"),
+        createKey(["service-buttons", "cmd"], "command"),
+        createKey(["service-buttons", "space"], "", addSpace),
+        createKey(["service-buttons", "cmd"], "command"),
+        createKey(["service-buttons", "option"], "option"),
+        createKey(["service-buttons", "arrow"], "←", addLeft),
+        createKey(["service-buttons", "arrow"], "↑", addUp),
+        createKey(["service-buttons", "arrow"], "→", addRight),
+        createKey(["service-buttons", "arrow"], "↓", addDown),
+      ];
+    default:
+      return [];
   }
 }
 
-for (let i = 0; i < rows.length; i += 1) {
+function createRow(i) {
   const row = document.createElement("div");
   row.classList.add("row");
 
-  if (i === 0) {
-    const keyEsc = document.createElement("div");
-    keyEsc.classList.add("esc", "service-buttons");
-    keyEsc.textContent = "esc";
-    row.insertBefore(keyEsc, row.firstChild);
-  }
+  // Add special keys
+  const specialKeys = createSpecialKeys(i);
+  specialKeys.forEach((key) => row.appendChild(key));
 
-  if (i === 1) {
-    const keyTab = document.createElement("div");
-    keyTab.classList.add("tab", "service-buttons");
-    keyTab.textContent = "tab";
-    row.insertBefore(keyTab, row.firstChild);
-
-    keyTab.addEventListener("click", addIndent);
-  }
-  if (i === 2) {
-    const keyCapsLock = document.createElement("div");
-    keyCapsLock.classList.add("service-buttons", "caps");
-    keyCapsLock.textContent = "caps lock";
-    row.insertBefore(keyCapsLock, row.firstChild);
-
-    keyCapsLock.addEventListener("click", toggleCapslock);
-  }
-
-  if (i === 3) {
-    const keyShift = document.createElement("div");
-    keyShift.classList.add("service-buttons", "shift");
-    keyShift.textContent = "shift";
-    row.insertBefore(keyShift, row.firstChild);
-  }
-  for (let j = 0; j < rows[i].length; j += 1) {
-    const key = document.createElement("div");
-    key.classList.add("key");
-    key.textContent = rows[i][j];
+  // Add regular keys
+  for (let j = 0; j < rows[i].length; j++) {
+    const key = createKey(["key"], rows[i][j]);
     row.appendChild(key);
   }
 
   if (i === 0) {
-    const keyDelete = document.createElement("div");
-    keyDelete.classList.add("service-buttons", "delete");
-    keyDelete.textContent = "delete";
+    const keyDelete = createKey(
+      ["service-buttons", "delete"],
+      "delete",
+      deletePreviousChar
+    );
     row.appendChild(keyDelete);
-
-    keyDelete.addEventListener("click", deletePreviousChar);
   }
 
   if (i === 1) {
-    const keyEnter = document.createElement("div");
-    keyEnter.classList.add("service-buttons", "enter");
-    keyEnter.textContent = "enter";
-    row.appendChild(keyEnter);
-
-    keyEnter.addEventListener("click", () => {
+    const keyEnter = createKey(["service-buttons", "enter"], "enter", () => {
       const cursorPosition = textarea.selectionStart;
       const textBeforeCursorPosition = textarea.value.substring(
         0,
@@ -196,100 +173,30 @@ for (let i = 0; i < rows.length; i += 1) {
       textarea.selectionEnd = cursorPosition + 1;
       textarea.focus();
     });
+    row.appendChild(keyEnter);
   }
 
   if (i === 3) {
-    const keyShift = document.createElement("div");
-    keyShift.classList.add("service-buttons", "shift2");
-    keyShift.textContent = "shift";
+    const keyShift = createKey(["service-buttons", "shift2"], "shift");
     row.appendChild(keyShift);
   }
 
-  if (i === 4) {
-    const keyFn = document.createElement("div");
-    keyFn.classList.add("service-buttons");
-    keyFn.textContent = "\u{1F310}";
-    row.appendChild(keyFn);
+  return row;
+}
 
-    keyFn.addEventListener("click", handleClick);
-
-    const keyCtrl = document.createElement("div");
-    keyCtrl.classList.add("service-buttons", "ctrl");
-    keyCtrl.setAttribute("value", " ");
-    keyCtrl.textContent = "control";
-    row.appendChild(keyCtrl);
-
-    keyCtrl.addEventListener("click", () => {
-      textarea.value = "";
-    });
-
-    const keyOption1 = document.createElement("div");
-    keyOption1.classList.add("service-buttons", "option");
-    keyOption1.textContent = "option";
-    row.appendChild(keyOption1);
-
-    const keyCmd1 = document.createElement("div");
-    keyCmd1.classList.add("service-buttons", "cmd");
-    keyCmd1.textContent = "command";
-    row.appendChild(keyCmd1);
-
-    const keySpace = document.createElement("div");
-    keySpace.classList.add("service-buttons", "space");
-    keySpace.textContent = "";
-    row.appendChild(keySpace);
-
-    keySpace.addEventListener("click", addSpace);
-
-    const keyCmd2 = document.createElement("div");
-    keyCmd2.classList.add("service-buttons", "cmd");
-    keyCmd2.textContent = "command";
-    row.appendChild(keyCmd2);
-
-    const keyOption2 = document.createElement("div");
-    keyOption2.classList.add("service-buttons", "option");
-    keyOption2.textContent = "option";
-    row.appendChild(keyOption2);
-
-    const keyLeft = document.createElement("div");
-    keyLeft.classList.add("service-buttons", "arrow");
-    keyLeft.textContent = "←";
-    row.appendChild(keyLeft);
-
-    keyLeft.addEventListener("click", addLeft);
-
-    const keyUp = document.createElement("div");
-    keyUp.classList.add("service-buttons", "arrow");
-    keyUp.textContent = "↑";
-    row.appendChild(keyUp);
-
-    keyUp.addEventListener("click", addUp);
-
-    const keyRight = document.createElement("div");
-    keyRight.classList.add("service-buttons", "arrow");
-    keyRight.textContent = "→";
-    row.appendChild(keyRight);
-
-    keyRight.addEventListener("click", addRight);
-
-    const keyDown = document.createElement("div");
-    keyDown.classList.add("service-buttons", "arrow");
-    keyDown.textContent = "↓";
-    row.appendChild(keyDown);
-
-    keyDown.addEventListener("click", addDown);
-  }
-
-  window.addEventListener("load", () => {
-    const capsLockEnabled = localStorage.getItem("capsLockEnabled");
-    if (capsLockEnabled === "true") {
-      keys.forEach((key) => {
-        const uppercaseText = key.textContent.toUpperCase();
-        key.textContent = uppercaseText;
-      });
-    }
-  });
+for (let i = 0; i < rows.length; i += 1) {
+  const row = createRow(i);
   containerRows.appendChild(row);
 }
+
+window.addEventListener("load", () => {
+  if (capsLockEnabled === "true") {
+    keys.forEach((key) => {
+      const uppercaseText = key.textContent.toUpperCase();
+      key.textContent = uppercaseText;
+    });
+  }
+});
 
 const keys = document.querySelectorAll(".key");
 
