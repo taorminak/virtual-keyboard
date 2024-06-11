@@ -3,14 +3,14 @@ import {
   saveLanguageState,
   getCapsLockEnabled,
   getLanguage,
-} from "./storage.js";
+} from './storage.js';
 import {
   createComment,
   createContainerRows,
   createTextarea,
   createKeyboard,
   createKey,
-} from "./layout.js";
+} from './layout.js';
 
 let capsLockEnabled = getCapsLockEnabled();
 let isRussian = getLanguage();
@@ -20,45 +20,44 @@ const textarea = createTextarea(keyboard);
 const containerRows = createContainerRows(keyboard);
 createComment(keyboard);
 
-const rows = ["1234567890?`", "qwertyuiop+", "asdfghjkl;,-", "zxcvbnm<>/", ""];
+const rows = ['1234567890?`', 'qwertyuiop+', 'asdfghjkl;,-', 'zxcvbnm<>/', ''];
 const rowsWithRussian = [
-  "1234567890?",
-  "йцукенгшщзх",
-  "фывапролджэё",
-  "ячсмитьбю?",
-  "",
+  '1234567890?',
+  'йцукенгшщзх',
+  'фывапролджэё',
+  'ячсмитьбю?',
+  '',
 ];
 
 function addLeft() {
-  textarea.value += "←";
+  textarea.value += '←';
 }
 
 function addRight() {
-  textarea.value += "→";
+  textarea.value += '→';
 }
 
 function addUp() {
-  textarea.value += "↑";
+  textarea.value += '↑';
 }
 
 function addDown() {
-  textarea.value += "↓";
+  textarea.value += '↓';
 }
 
 function addSpace() {
-  textarea.value += " ";
+  textarea.value += ' ';
 }
 
 function addIndent() {
-  textarea.value += "    ";
+  textarea.value += '    ';
 }
 
 function deletePreviousChar() {
   const cursorPosition = textarea.selectionStart;
   if (cursorPosition > 0) {
     const text = textarea.value;
-    textarea.value =
-      text.substring(0, cursorPosition - 1) + text.substring(cursorPosition);
+    textarea.value = text.substring(0, cursorPosition - 1) + text.substring(cursorPosition);
     textarea.selectionStart = cursorPosition - 1;
     textarea.selectionEnd = cursorPosition - 1;
   }
@@ -104,30 +103,30 @@ function handleClick() {
 function createSpecialKeys(i) {
   switch (i) {
     case 0:
-      return [createKey(["esc", "service-buttons"], "esc")];
+      return [createKey(['esc', 'service-buttons'], 'esc')];
     case 1:
-      return [createKey(["tab", "service-buttons"], "tab", addIndent)];
+      return [createKey(['tab', 'service-buttons'], 'tab', addIndent)];
     case 2:
       return [
-        createKey(["service-buttons", "caps"], "caps lock", toggleCapslock),
+        createKey(['service-buttons', 'caps'], 'caps lock', toggleCapslock),
       ];
     case 3:
-      return [createKey(["service-buttons", "shift"], "shift")];
+      return [createKey(['service-buttons', 'shift'], 'shift')];
     case 4:
       return [
-        createKey(["service-buttons"], "\u{1F310}", handleClick),
-        createKey(["service-buttons", "ctrl"], "control", () => {
-          textarea.value = "";
+        createKey(['service-buttons'], '\u{1F310}', handleClick),
+        createKey(['service-buttons', 'ctrl'], 'control', () => {
+          textarea.value = '';
         }),
-        createKey(["service-buttons", "option"], "option"),
-        createKey(["service-buttons", "cmd"], "command"),
-        createKey(["service-buttons", "space"], "", addSpace),
-        createKey(["service-buttons", "cmd"], "command"),
-        createKey(["service-buttons", "option"], "option"),
-        createKey(["service-buttons", "arrow"], "←", addLeft),
-        createKey(["service-buttons", "arrow"], "↑", addUp),
-        createKey(["service-buttons", "arrow"], "→", addRight),
-        createKey(["service-buttons", "arrow"], "↓", addDown),
+        createKey(['service-buttons', 'option'], 'option'),
+        createKey(['service-buttons', 'cmd'], 'command'),
+        createKey(['service-buttons', 'space'], '', addSpace),
+        createKey(['service-buttons', 'cmd'], 'command'),
+        createKey(['service-buttons', 'option'], 'option'),
+        createKey(['service-buttons', 'arrow'], '←', addLeft),
+        createKey(['service-buttons', 'arrow'], '↑', addUp),
+        createKey(['service-buttons', 'arrow'], '→', addRight),
+        createKey(['service-buttons', 'arrow'], '↓', addDown),
       ];
     default:
       return [];
@@ -135,8 +134,8 @@ function createSpecialKeys(i) {
 }
 
 function createRow(i) {
-  const row = document.createElement("div");
-  row.classList.add("row");
+  const row = document.createElement('div');
+  row.classList.add('row');
 
   // Add special keys
   const specialKeys = createSpecialKeys(i);
@@ -144,29 +143,29 @@ function createRow(i) {
 
   // Add regular keys
   for (let j = 0; j < rows[i].length; j++) {
-    const key = createKey(["key"], rows[i][j]);
+    const key = createKey(['key'], rows[i][j]);
     row.appendChild(key);
   }
 
   if (i === 0) {
     const keyDelete = createKey(
-      ["service-buttons", "delete"],
-      "delete",
-      deletePreviousChar
+      ['service-buttons', 'delete'],
+      'delete',
+      deletePreviousChar,
     );
     row.appendChild(keyDelete);
   }
 
   if (i === 1) {
-    const keyEnter = createKey(["service-buttons", "enter"], "enter", () => {
+    const keyEnter = createKey(['service-buttons', 'enter'], 'enter', () => {
       const cursorPosition = textarea.selectionStart;
       const textBeforeCursorPosition = textarea.value.substring(
         0,
-        cursorPosition
+        cursorPosition,
       );
       const textAfterCursorPosition = textarea.value.substring(
         cursorPosition,
-        textarea.value.length
+        textarea.value.length,
       );
       textarea.value = `${textBeforeCursorPosition}\n${textAfterCursorPosition}`;
       textarea.selectionStart = cursorPosition + 1;
@@ -177,7 +176,7 @@ function createRow(i) {
   }
 
   if (i === 3) {
-    const keyShift = createKey(["service-buttons", "shift2"], "shift");
+    const keyShift = createKey(['service-buttons', 'shift2'], 'shift');
     row.appendChild(keyShift);
   }
 
@@ -189,8 +188,8 @@ for (let i = 0; i < rows.length; i += 1) {
   containerRows.appendChild(row);
 }
 
-window.addEventListener("load", () => {
-  if (capsLockEnabled === "true") {
+window.addEventListener('load', () => {
+  if (capsLockEnabled === 'true') {
     keys.forEach((key) => {
       const uppercaseText = key.textContent.toUpperCase();
       key.textContent = uppercaseText;
@@ -198,24 +197,24 @@ window.addEventListener("load", () => {
   }
 });
 
-const keys = document.querySelectorAll(".key");
+const keys = document.querySelectorAll('.key');
 
 function handleKeyDown(event) {
-  if (event.shiftKey && event.target.classList.contains("key")) {
+  if (event.shiftKey && event.target.classList.contains('key')) {
     event.preventDefault();
     textarea.value += event.target.textContent.toUpperCase();
   }
 }
 
-document.addEventListener("keydown", handleKeyDown);
+document.addEventListener('keydown', handleKeyDown);
 
-if (capsLockEnabled === "true") {
+if (capsLockEnabled === 'true') {
   keys.forEach((key) => {
     key.textContent = key.textContent.toUpperCase();
   });
 }
 
-if (isRussian === "true") {
+if (isRussian === 'true') {
   for (let i = 0; i < rowsWithRussian.length; i += 1) {
     const currentRow = containerRows.children[i];
     for (let j = 0; j < rowsWithRussian[i].length; j += 1) {
@@ -224,14 +223,14 @@ if (isRussian === "true") {
   }
 }
 
-document.addEventListener("keydown", (event) => {
+document.addEventListener('keydown', (event) => {
   const key = document.querySelectorAll(
-    `.key[data-key="${event}"], .service-buttons[data-key="${event}"]`
+    `.key[data-key="${event}"], .service-buttons[data-key="${event}"]`,
   );
   if (key) {
     key.forEach((el) => {
       el.click();
-      el.classList.add("pressed");
+      el.classList.add('pressed');
     });
   }
 });
@@ -241,4 +240,4 @@ function onKeyPress(event) {
   textarea.value += value;
 }
 
-keys.forEach((key) => key.addEventListener("click", onKeyPress));
+keys.forEach((key) => key.addEventListener('click', onKeyPress));
