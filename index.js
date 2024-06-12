@@ -6,11 +6,21 @@ import {
   createKeyboard,
   createKey,
 } from "./layout.js";
-import { toggleCapslock, toggleLanguage } from "./utils.js";
-import { ROWS, ROWS_WITH_RUSSIAN } from "./data.js";
+import {
+  toggleCapslock,
+  toggleLanguage,
+  chooseCase,
+  addTextToKey,
+} from "./utils.js";
+import { ROWS } from "./data.js";
 
-let capsLockEnabled = getCapsLockEnabled();
-let isRussian = getLanguage();
+window.addEventListener("load", () => {
+  let capsLockEnabled = getCapsLockEnabled();
+  let isRussian = getLanguage();
+  chooseCase(capsLockEnabled);
+  addTextToKey(isRussian);
+});
+
 let isShiftPressed;
 
 const keyboard = createKeyboard();
@@ -55,7 +65,6 @@ function deletePreviousChar() {
 
 function handleClick() {
   toggleLanguage();
-  toggleCapslock();
 }
 
 function createSpecialKeys(i) {
@@ -147,24 +156,6 @@ for (let i = 0; i < ROWS.length; i += 1) {
 }
 
 const keys = document.querySelectorAll(".key");
-
-window.addEventListener("load", () => {
-  if (capsLockEnabled) {
-    keys.forEach((key) => {
-      const uppercaseText = key.textContent.toUpperCase();
-      key.textContent = uppercaseText;
-    });
-  }
-});
-
-if (isRussian) {
-  for (let i = 0; i < ROWS_WITH_RUSSIAN.length; i += 1) {
-    const currentRow = containerRows.children[i];
-    for (let j = 0; j < ROWS_WITH_RUSSIAN[i].length; j += 1) {
-      currentRow.children[j + 1].textContent = ROWS_WITH_RUSSIAN[i][j];
-    }
-  }
-}
 
 function onPressKey(event) {
   const key = event.target;

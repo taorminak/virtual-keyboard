@@ -11,17 +11,27 @@ let isRussian = getLanguage();
 
 export function toggleCapslock() {
   capsLockEnabled = !capsLockEnabled;
+  chooseCase(capsLockEnabled);
+  saveCapsLockState(capsLockEnabled);
+}
+
+export function chooseCase(capsLockEnabled) {
   const keys = document.querySelectorAll(".key");
   keys.forEach((key) => {
     let keyText = key.textContent;
     keyText = capsLockEnabled ? keyText.toUpperCase() : keyText.toLowerCase();
     key.textContent = keyText;
   });
-  saveCapsLockState(capsLockEnabled);
 }
 
 export function toggleLanguage() {
-  const targetRows = isRussian ? ROWS : ROWS_WITH_RUSSIAN;
+  isRussian = !isRussian;
+  addTextToKey(isRussian);
+  saveLanguageState(isRussian);
+}
+
+export function addTextToKey(isRussian) {
+  const targetRows = isRussian ? ROWS_WITH_RUSSIAN : ROWS;
   const containerRows = document.querySelector(".container-rows");
   for (let i = 0; i < targetRows.length; i++) {
     const currentRow = containerRows.children[i];
@@ -29,6 +39,4 @@ export function toggleLanguage() {
       currentRow.children[j + 1].textContent = targetRows[i][j];
     }
   }
-  isRussian = !isRussian;
-  saveLanguageState(isRussian);
 }
