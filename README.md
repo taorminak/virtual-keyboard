@@ -9,4 +9,4 @@ To switch between English and Russian, use the 🌐 sign.
 # Controlling with Physical Keyboard
 The virtual keyboard can be controlled using your physical keyboard. For example, pressing a key on your physical keyboard will highlight and activate the corresponding key on the virtual keyboard.
 
-# [Deploy:](https://virtual-keyboard-en-ru.netlify.app/) 
+# [Deploy](https://virtual-keyboard-en-ru.netlify.app/) 
