@@ -1,24 +1,24 @@
-import { getCapsLockEnabled, getLanguage } from "./storage.js";
+import { getCapsLockEnabled, getLanguage } from './src/storage.js';
 import {
   createComment,
   createContainerRows,
   createTextarea,
   createKeyboard,
   createKey,
-} from "./layout.js";
+} from './src/layout.js';
 import {
   toggleCapslock,
   toggleLanguage,
   chooseCase,
   addTextToKey,
-} from "./utils.js";
-import { ROWS } from "./data.js";
+} from './src/utils.js';
+import { ROWS } from './src/dataKeys.js';
 
-window.addEventListener("load", () => {
-  let capsLockEnabled = getCapsLockEnabled();
-  let isRussian = getLanguage();
-  chooseCase(capsLockEnabled);
+window.addEventListener('load', () => {
+  const capsLockEnabled = getCapsLockEnabled();
+  const isRussian = getLanguage();
   addTextToKey(isRussian);
+  chooseCase(capsLockEnabled);
 });
 
 let isShiftPressed;
@@ -28,124 +28,98 @@ const textarea = createTextarea(keyboard);
 const containerRows = createContainerRows(keyboard);
 createComment(keyboard);
 
-function addLeft() {
-  textarea.value += "←";
-}
-
-function addRight() {
-  textarea.value += "→";
-}
-
-function addUp() {
-  textarea.value += "↑";
-}
-
-function addDown() {
-  textarea.value += "↓";
-}
-
-function addSpace() {
-  textarea.value += " ";
-}
-
-function addIndent() {
-  textarea.value += "    ";
+function addText(text) {
+  textarea.value += text;
 }
 
 function deletePreviousChar() {
   const cursorPosition = textarea.selectionStart;
   if (cursorPosition > 0) {
     const text = textarea.value;
-    textarea.value =
-      text.substring(0, cursorPosition - 1) + text.substring(cursorPosition);
+    textarea.value = text.substring(0, cursorPosition - 1) + text.substring(cursorPosition);
     textarea.selectionStart = cursorPosition - 1;
     textarea.selectionEnd = cursorPosition - 1;
   }
 }
 
-function handleClick() {
-  toggleLanguage();
+function addEnter() {
+  const cursorPosition = textarea.selectionStart;
+  const text = textarea.value;
+  const newText = `${text.substring(0, cursorPosition)}\n${text.substring(cursorPosition)}`;
+
+  textarea.value = newText;
+  textarea.selectionStart = cursorPosition + 1;
+  textarea.selectionEnd = cursorPosition + 1;
+  textarea.focus();
 }
 
 function createSpecialKeys(i) {
   switch (i) {
     case 0:
-      return [createKey(["esc", "service-buttons"], "esc")];
+      return [
+        createKey(['esc', 'service-buttons'], 'esc'),
+        createKey(['service-buttons', 'delete'], 'delete', deletePreviousChar),
+      ];
     case 1:
-      return [createKey(["tab", "service-buttons"], "tab", addIndent)];
+      return [
+        createKey(['tab', 'service-buttons'], 'tab', () => addText('    ')),
+        createKey(['service-buttons', 'enter'], 'enter', addEnter),
+      ];
     case 2:
       return [
-        createKey(["service-buttons", "caps"], "caps lock", toggleCapslock),
+        createKey(['service-buttons', 'caps'], 'caps lock', () => toggleCapslock(getCapsLockEnabled())),
       ];
     case 3:
-      return [createKey(["service-buttons", "shift"], "shift")];
+      return [
+        createKey(['service-buttons', 'shift'], 'shift'),
+        createKey(['service-buttons', 'shift2'], 'shift'),
+      ];
     case 4:
       return [
-        createKey(["service-buttons"], "\u{1F310}", handleClick),
-        createKey(["service-buttons", "ctrl"], "control", () => {
-          textarea.value = "";
-        }),
-        createKey(["service-buttons", "option"], "option"),
-        createKey(["service-buttons", "cmd"], "command"),
-        createKey(["service-buttons", "space"], "", addSpace),
-        createKey(["service-buttons", "cmd"], "command"),
-        createKey(["service-buttons", "option"], "option"),
-        createKey(["service-buttons", "arrow"], "←", addLeft),
-        createKey(["service-buttons", "arrow"], "↑", addUp),
-        createKey(["service-buttons", "arrow"], "→", addRight),
-        createKey(["service-buttons", "arrow"], "↓", addDown),
+        createKey(['service-buttons'], '\u{1F310}', () => toggleLanguage(getLanguage())),
+        createKey(['service-buttons', 'ctrl'], 'control', () => { textarea.value = ''; }),
+        createKey(['service-buttons', 'option'], 'option'),
+        createKey(['service-buttons', 'cmd'], 'command'),
+        createKey(['service-buttons', 'space'], '', () => addText(' ')),
+        createKey(['service-buttons', 'cmd'], 'command'),
+        createKey(['service-buttons', 'option'], 'option'),
+        createKey(['service-buttons', 'arrow'], '←', () => addText('←')),
+        createKey(['service-buttons', 'arrow'], '↑', () => addText('↑')),
+        createKey(['service-buttons', 'arrow'], '→', () => addText('→')),
+        createKey(['service-buttons', 'arrow'], '↓', () => addText('↓')),
       ];
     default:
       return [];
   }
 }
 
-function createRow(i) {
-  const row = document.createElement("div");
-  row.classList.add("row");
-
-  // Add special keys
+function addSpecialKey(i, row) {
   const specialKeys = createSpecialKeys(i);
-  specialKeys.forEach((key) => row.appendChild(key));
+  specialKeys.forEach((key) => {
+    if ((i === 0 && key.classList.contains('delete')) || (i === 1 && key.classList.contains('enter')) || (i === 3 && key.classList.contains('shift2')) || (i === 4)) {
+      row.appendChild(key);
+    } else {
+      row.insertBefore(key, row.firstChild);
+    }
+  });
+}
 
-  // Add regular keys
-  for (let j = 0; j < ROWS[i].length; j++) {
-    const key = createKey(["key"], ROWS[i][j]);
+function addRegularKey(i, row) {
+  for (let j = 0; j < ROWS[i].length; j += 1) {
+    const key = createKey(['key'], ROWS[i][j]);
     row.appendChild(key);
   }
+}
 
-  if (i === 0) {
-    const keyDelete = createKey(
-      ["service-buttons", "delete"],
-      "delete",
-      deletePreviousChar
-    );
-    row.appendChild(keyDelete);
-  }
+function createRow(i) {
+  const row = document.createElement('div');
+  row.classList.add('row');
 
-  if (i === 1) {
-    const keyEnter = createKey(["service-buttons", "enter"], "enter", () => {
-      const cursorPosition = textarea.selectionStart;
-      const textBeforeCursorPosition = textarea.value.substring(
-        0,
-        cursorPosition
-      );
-      const textAfterCursorPosition = textarea.value.substring(
-        cursorPosition,
-        textarea.value.length
-      );
-      textarea.value = `${textBeforeCursorPosition}\n${textAfterCursorPosition}`;
-      textarea.selectionStart = cursorPosition + 1;
-      textarea.selectionEnd = cursorPosition + 1;
-      textarea.focus();
-    });
-    row.appendChild(keyEnter);
-  }
+  // Add regular keys
+  addRegularKey(i, row);
 
-  if (i === 3) {
-    const keyShift = createKey(["service-buttons", "shift2"], "shift");
-    row.appendChild(keyShift);
-  }
+  // Add special keys
+  addSpecialKey(i, row);
 
   return row;
 }
@@ -155,28 +129,28 @@ for (let i = 0; i < ROWS.length; i += 1) {
   containerRows.appendChild(row);
 }
 
-const keys = document.querySelectorAll(".key");
+const keys = document.querySelectorAll('.key');
 
 function onPressKey(event) {
   const key = event.target;
-  if (key.classList.contains("key")) {
+  if (key.classList.contains('key')) {
     const value = isShiftPressed
       ? key.textContent.toUpperCase()
       : key.textContent;
-    textarea.value += value;
+    addText(value);
   }
 }
 
-document.addEventListener("keydown", function (event) {
-  if (event.key === "Shift") {
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Shift') {
     isShiftPressed = true;
   }
 });
 
-document.addEventListener("keyup", function (event) {
-  if (event.key === "Shift") {
+document.addEventListener('keyup', (event) => {
+  if (event.key === 'Shift') {
     isShiftPressed = false;
   }
 });
 
-keys.forEach((key) => key.addEventListener("click", onPressKey));
+keys.forEach((key) => key.addEventListener('click', onPressKey));

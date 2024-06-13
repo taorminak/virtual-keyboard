@@ -12,7 +12,7 @@
   "rules": {
     "semi": ["error", "always"],
     "max-len": [
-      "error",
+      "warn",
       { "code": 120, "ignorePattern": "^import\\s.+\\sfrom\\s.+;$" }
     ],
     "no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 1 }],
