@@ -162,3 +162,51 @@
 .esc {
   font-size: 12px;
 }
+
+.game-container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  text-align: center;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: black;
+}
+
+.question {
+  font-size: 1.2em;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.word-display {
+  font-size: 2em;
+  letter-spacing: 8px;
+  font-family: monospace;
+  margin: 20px 0;
+}
+
+.tries {
+  font-size: 1.1em;
+  color: #666;
+}
+
+.game-status {
+  margin-top: 20px;
+}
+
+.reset-game {
+  padding: 10px 20px;
+  font-size: 1.1em;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.reset-game:hover {
+  background-color: #45a049;
+}
