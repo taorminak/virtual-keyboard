@@ -1,0 +1,25 @@
+:root {
+  /* Colors */
+  --color-primary: #f09394;
+  --color-primary-light: #f7c9c9;
+  --color-background: black;
+  --color-text: white;
+  --color-key: white;
+  --color-key-text: black;
+  
+  /* Typography */
+  --font-family-main: system-ui, sans-serif;
+  --font-size-small: 12px;
+  --font-size-medium: 16px;
+  --font-size-large: 22px;
+  
+  /* Border Radius */
+  --border-radius-small: 5px;
+  --border-radius-medium: 10px;
+  --border-radius-circle: 50%;
+  
+  /* Spacing */
+  --spacing-small: 5px;
+  --spacing-medium: 10px;
+  --spacing-large: 15px;
+} 

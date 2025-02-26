@@ -1,29 +1,42 @@
+@import 'base.css';
+
+body {
+  height: 100vh;
+}
+
 .keyboard {
   display: flex;
   height: 100vh;
-  padding: 10px;
+  padding: var(--spacing-medium);
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: black;
-  color: white;
+  background-color: var(--color-background);
+  color: var(--color-text);
 }
 
 .textarea {
   width: 80%;
-  height: 40vh;
-  font-size: 22px;
-  font-family: system-ui, sans-serif;
-  border-radius: 10px;
-  margin-bottom: 10px;
+  max-height: 40vh;
+  min-height: 20vh;
+  font-size: var(--font-size-large);
+  font-family: var(--font-family-main);
+  border-radius: var(--border-radius-medium);
+  margin-bottom: var(--spacing-medium);
   resize: none;
-  caret-color: black;
+  caret-color: var(--color-key-text);
+  padding: 10px;
+  margin: 10px 0;
+
 }
 
 .row {
   display: flex;
-  justify-content: center;
-  margin: 10px 0;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: nowrap;
+  margin: 10px auto;
+  width: 100%;
 }
 
 .key {
@@ -32,8 +45,9 @@
   align-items: center;
   width: 50px;
   height: 50px;
-  background-color: white;
-  color: black;
+  aspect-ratio: 1/1;
+  background-color: var(--color-key);
+  color: var(--color-key-text);
   font-family: system-ui, sans-serif;
   font-size: 16px;
   margin: 0 5px;
@@ -42,34 +56,30 @@
   transition: all 0.2s ease-in-out;
 }
 
-.key:hover {
-  background-color: #f7c9c9;
-  color: white;
-}
-
 .key:active {
-  border-radius: 50%;
-  background-color: #f09394;
-  color: white;
+  border-radius: 15px;
+  background-color: var(--color-primary);
+  color: var(--color-text);
 }
 
 .pressed {
-  border-radius: 50%;
-  background-color: #f09394;
-  color: white;
+  border-radius: 15px;
+  background-color: var(--color-primary);
+  color: var(--color-text);
 }
 
 .container-rows {
-  border: 2px solid #f09394;
+  border: 2px solid var(--color-primary);
   width: 80%;
-  padding: 10px 15px;
+  padding: 5px;
+  margin: 10px 0;
   border-radius: 10px;
 }
 
 .comment {
   font-family: system-ui, sans-serif;
   font-size: 12px;
-  color: white;
+  color: var(--color-text);
   margin-top: 10px;
 }
 
@@ -77,10 +87,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 50px;
+  min-width: 50px;
   height: 50px;
-  background-color: white;
-  color: black;
+  background-color: var(--color-key);
+  color: var(--color-key-text);
   font-family: system-ui, sans-serif;
   font-size: 16px;
   margin: 0 5px;
@@ -89,15 +99,10 @@
   transition: all 0.2s ease-in-out;
 }
 
-.service-buttons:hover {
-  background-color: #f7c9c9;
-  color: white;
-}
-
 .service-buttons:active {
-  border-radius: 50%;
-  background-color: #f09394;
-  color: white;
+  border-radius: 15px;
+  background-color: var(--color-primary);
+  color: var(--color-text);
 }
 
 .option {
@@ -163,50 +168,362 @@
   font-size: 12px;
 }
 
-.game-container {
-  max-width: 800px;
-  margin: 20px auto;
-  padding: 20px;
+.keyboard-warning {
+  display: none;
+  justify-content: center;
+  align-items: center;
   text-align: center;
-  background-color: #f5f5f5;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  color: black;
+  font-size: 18px;
+  color: var(--color-key-text);
+  padding: 20px;
 }
 
-.question {
-  font-size: 1.2em;
-  margin-bottom: 20px;
-  color: #333;
+@media (min-width: 1200px) {
+
+  .key {
+    width: 55px;
+    height: 55px;
+  }
+
+  .service-buttons {
+    min-width: 55px;
+    height: 55px;
+  }
 }
 
-.word-display {
-  font-size: 2em;
-  letter-spacing: 8px;
-  font-family: monospace;
-  margin: 20px 0;
+@media (min-width: 1280px) {
+
+  .key {
+    width: 60px;
+    height: 60px;
+  }
+
+  .service-buttons {
+    min-width: 60px;
+    height: 60px;
+  }
 }
 
-.tries {
-  font-size: 1.1em;
-  color: #666;
+@media (min-width: 1280px) {
+
+  .key {
+    width: 65px;
+    height: 65px;
+  }
+
+  .service-buttons {
+    min-width: 65px;
+    height: 65px;
+  }
 }
 
-.game-status {
-  margin-top: 20px;
+/* Tablet Styles */
+@media screen and (max-width: 1068px) {
+  .keyboard {
+    padding: 5px;
+  }
+
+  .textarea {
+    width: 80%;
+    height: 30vh;
+    font-size: 18px;
+    padding: 5px 10px;
+  }
+
+  .container-rows {
+    width: 80%;
+    padding: 5px 10px;
+  }
+
+  .key {
+    width: 45px;
+    height: 45px;
+    font-size: 12px;
+    margin: 0 2px;
+  }
+
+  .space {
+    width: 180px;
+  }
+
+  .shift2 {
+    width: 100px;
+  }
+
+  .enter {
+    width: 80px;
+  }
+
+  .delete {
+    width: 70px;
+  }
+
+  .shift {
+    width: 60px;
+  }
+
+  .caps {
+    width: 100px;
+  }
+
+  .tab {
+    width: 60px;
+  }
+
+  .service-buttons {
+    min-width: 45px;
+    height: 45px;
+    font-size: 12px;
+    margin: 0 2px;
+  }
+
+  .comment {
+    font-size: 10px;
+  }
+
+  .option {
+    font-size: 10px;
+  }
+
+  .cmd {
+    font-size: 10px;
+  }
+
+  .arrow {
+    font-size: 10px;
+  }
+
+  .ctrl {
+    font-size: 10px;
+  }
+
+  .esc {
+    font-size: 10px;
+  }
 }
 
-.reset-game {
-  padding: 10px 20px;
-  font-size: 1.1em;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+/* Mobile Styles */
+@media screen and (max-width: 864px) {
+  .keyboard {
+    padding: 3px;
+  }
+
+  .textarea {
+    width: 85%;
+    height: 25vh;
+    font-size: 16px;
+  }
+
+  .key {
+    width: 40px;
+    height: 40px;
+    font-size: 10px;
+    margin: 0 1px;
+  }
+
+  .space {
+    max-width: 160px;
+  }
+
+  .shift2 {
+    max-width: 80px;
+  }
+
+  .enter {
+    max-width: 100px;
+  }
+
+  .delete {
+    max-width: 80px;
+  }
+
+  .shift {
+    max-width: 90px;
+  }
+
+  .caps {
+    max-width: 100px;
+  }
+
+  .tab {
+    max-width: 80px;
+  }
+
+  .container-rows {
+    width: 85%;
+    padding: 5px 10px;
+  }
+
+  .service-buttons {
+    min-width: 40px;
+    height: 40px;
+    font-size: 10px;
+    margin: 0 1px;
+  }
+
+  .comment {
+    font-size: 8px;
+  }
+
+  .option {
+    font-size: 8px;
+  }
+
+  .cmd {
+    font-size: 8px;
+  }
+
+  .arrow {
+    font-size: 8px;
+  }
+
+  .ctrl {
+    font-size: 8px;
+  }
+
+  .esc {
+    font-size: 8px;
+  }
 }
 
-.reset-game:hover {
-  background-color: #45a049;
+@media screen and (max-width: 698px) {
+  .keyboard {
+    padding: 2px;
+  }
+
+  .row {
+    margin: 5px auto;
+  }
+
+  .key {
+    width: 35px;
+    height: 35px;
+  }
+
+  .service-buttons {
+    min-width: 35px;
+    height: 35px;
+  }
+
+  .shift {
+    max-width: 90px;
+  }
+
+  .shift2 {
+    max-width: 90px;
+  }
+
+  .cmd {
+    max-width: 60px;
+  }
+
+  .space {
+    max-width: 140px;
+  }
+}
+
+@media screen and (max-width: 614px) {
+  .keyboard {
+    padding: 1px;
+  }
+
+  .row {
+    margin: 3px auto;
+  }
+
+  .key {
+    width: 30px;
+    height: 30px;
+  }
+
+  .service-buttons {
+    min-width: 30px;
+    height: 30px;
+    }
+
+  .shift {
+    max-width: 100px;
+  }
+
+  .shift2 {
+    max-width: 100px;
+  }
+
+  .cmd {
+    max-width: 55px;
+  }
+
+  .space {
+    max-width: 110px;
+  }
+}
+
+@media screen and (max-width: 527px) {
+  .keyboard {
+    padding: 0px;
+  }
+
+  .row {
+    margin: 2px auto;
+  }
+
+  .key {
+    width: 27px;
+    height: 27px;
+  }
+
+  .service-buttons {
+    min-width: 27px;
+    height: 27px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .keyboard {
+    padding: 0px;
+  }
+
+  .textarea {
+    width: 90%;
+    height: 30vh;
+  }
+
+  .container-rows {
+    width: 90%;
+    padding: 3px 5px;
+  }
+}
+
+@media (max-width: 449px) {
+  .keyboard {
+      display: none;
+    }
+  
+    .keyboard-warning {
+      display: flex;
+    }
+}
+
+@media (hover: hover) {
+  .key:hover {
+    background-color: var(--color-primary-light);
+    color: var(--color-text);
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: all 0.2s ease;
+  }
+
+  .service-buttons:hover {
+    background-color: var(--color-primary-light);
+    color: var(--color-text);
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: all 0.2s ease;
+  }
+
+  .caps.active:hover,
+  .shift.active:hover {
+    background-color: var(--color-primary-light);
+    color: var(--color-text);
+  }
 }
