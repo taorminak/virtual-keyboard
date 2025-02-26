@@ -36,6 +36,6 @@
     ],
     "import/extensions": "off",
     "import/prefer-default-export": "off",
-    "max-lines-per-function": ["warn", 40]
+    "max-lines-per-function": ["error", { "max": 200, "skipComments": true, "skipBlankLines": true }]
   }
 }

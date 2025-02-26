@@ -1,29 +1,29 @@
-import { toggleCapslock, chooseCase } from "../utils.js";
-import * as storage from "../storage.js";
+import { toggleCapslock, chooseCase } from '../utils.js';
+import * as storage from '../storage.js';
 
-jest.mock("../dataKeys.js", () => ({
+jest.mock('../dataKeys.js', () => ({
   ROWS: [
-    ["a", "b"],
-    ["c", "d"],
+    ['a', 'b'],
+    ['c', 'd'],
   ],
   ROWS_EN: [
-    ["a", "b"],
-    ["c", "d"],
+    ['a', 'b'],
+    ['c', 'd'],
   ],
   ROWS_RU: [
-    ["а", "б"],
-    ["в", "г"],
+    ['а', 'б'],
+    ['в', 'г'],
   ],
 }));
 
-jest.mock("../storage.js", () => ({
+jest.mock('../storage.js', () => ({
   saveCapsLockState: jest.fn(),
   getCapsLockEnabled: jest.fn(),
   saveLanguageState: jest.fn(),
   getLanguage: jest.fn(),
 }));
 
-describe("Utils Module", () => {
+describe('Utils Module', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
@@ -45,8 +45,8 @@ describe("Utils Module", () => {
     `;
   });
 
-  describe("toggleCapslock", () => {
-    test("toggles capslock state and updates storage", () => {
+  describe('toggleCapslock', () => {
+    test('toggles capslock state and updates storage', () => {
       storage.getCapsLockEnabled.mockReturnValue(false);
 
       toggleCapslock();
@@ -61,9 +61,9 @@ describe("Utils Module", () => {
     });
   });
 
-  describe("chooseCase", () => {
-    test("updates key text case based on capslock state", () => {
-      const keys = document.querySelectorAll(".key");
+  describe('chooseCase', () => {
+    test('updates key text case based on capslock state', () => {
+      const keys = document.querySelectorAll('.key');
 
       chooseCase(true);
       keys.forEach((key) => {
