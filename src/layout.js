@@ -1,35 +1,75 @@
-export const createKeyboard = () => {
+export function createKeyboard() {
   const keyboard = document.createElement('div');
-  keyboard.classList.add('keyboard');
+  keyboard.classList.add(
+    'h-screen',
+    'w-full',
+    'flex-col',
+    'justify-center',
+    'items-center',
+    'bg-black',
+    'text-white',
+    'keyboard',
+  );
   document.body.appendChild(keyboard);
   return keyboard;
-};
+}
 
-export const createTextarea = (keyboard) => {
+export function createTextarea(keyboard) {
   const textarea = document.createElement('textarea');
-  textarea.classList.add('textarea');
+  textarea.classList.add(
+    'w-4/5',
+    'max-h-[40vh]',
+    'min-h-[20vh]',
+    'text-[22px]',
+    'font-system',
+    'rounded-lg',
+    'mb-[10px]',
+    'resize-none',
+    'p-[10px]',
+    'my-[10px]',
+    'bg-white',
+    'text-black',
+    'textarea',
+  );
   keyboard.appendChild(textarea);
   return textarea;
-};
+}
 
-export const createContainerRows = (keyboard) => {
+export function createContainerRows(keyboard) {
   const containerRows = document.createElement('div');
-  containerRows.classList.add('container-rows');
+  containerRows.classList.add(
+    'w-4/5',
+    'p-[5px]',
+    'my-[10px]',
+    'rounded-[10px]',
+    'border-2',
+    'border-[#f09394]',
+    'container-rows',
+  );
   keyboard.appendChild(containerRows);
   return containerRows;
-};
+}
 
-export const createComment = (keyboard) => {
-  const comment = document.createElement('div');
-  comment.classList.add('comment');
+export function createComment(keyboard) {
+  const comment = document.createElement('p');
   comment.innerHTML = 'The keyboard is created in the macOS operating system<br/>To switch the language, use \u{1F310}';
+  comment.classList.add(
+    'font-system',
+    'text-xs',
+    'text-white',
+    'mt-2.5',
+    'md:text-[10px]',
+    'sm:text-[8px]',
+    'comment',
+  );
   keyboard.appendChild(comment);
-};
+  return comment;
+}
 
-export function createKey(classes, textContent, clickHandler) {
+export function createKey(classes, text, clickHandler) {
   const key = document.createElement('div');
-  key.classList.add(...classes);
-  key.textContent = textContent;
+  key.classList.add(...classes, 'active:rounded-[15px]', 'active:bg-[#f09394]', 'active:text-white');
+  key.textContent = text;
   if (clickHandler) {
     key.addEventListener('click', clickHandler);
   }
